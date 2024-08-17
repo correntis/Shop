@@ -1,0 +1,244 @@
+﻿<Window x:Class="Shop.AdminApp.AdminWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Shop.AdminApp"
+        xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:Xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:viewModelAdmin="clr-namespace:Shop.MVVM.ViewModel.AdminApp"
+        xmlns:viewAdmin="clr-namespace:Shop.MVVM.View.AdminApp"
+        xmlns:Converter="clr-namespace:Shop.Converters"
+        d:DataContext="{d:DesignInstance Type=viewModelAdmin:AdminAppViewModel}"
+        mc:Ignorable="d"
+         Height="720" Width="1080"
+         WindowStartupLocation="CenterScreen"
+         WindowStyle="None"
+         AllowsTransparency="True">
+
+    <Window.Resources>
+        <Converter:AdminRoleToVisibilityConverter x:Key="RoleToVisibility"/>
+    </Window.Resources>
+
+
+    <Grid x:Name="grid1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid>
+            <Border Width="200" x:Name="SideMenu" Grid.Row="1"
+                        Background="#7b5cd6">
+
+                <Grid x:Name="LeftMenuContainer">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <DockPanel x:Name="OpenMenuState">
+                        
+                        <TextBlock Text="500amper.by"
+                                       Foreground="White" FontSize="22"
+                                        FontWeight="SemiBold" DockPanel.Dock="Top" TextAlignment="Center"
+                                        Margin="5 25 0 10"/>
+                        
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                            <Border 
+                                Width="40"
+                                Height="40"
+                                Padding="3"
+                                Background="White"
+                                CornerRadius="100"
+                                HorizontalAlignment="Left"
+                                Margin="20 0 20 0">
+                                <Ellipse>
+                                    <Ellipse.Fill>
+                                        <ImageBrush ImageSource="D:\\уник\\четвертый сем\\ООП\\lab4-5\\Shop\\images\\admin.png"/>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                            </Border>
+                            <TextBlock x:Name="MenuUserRole_TextBox" Text="Администратор"
+                                           Foreground="#d0bfff" FontSize="14"
+                                       FontWeight="SemiBold" TextAlignment="Center" Height="20"/>
+                        </StackPanel>
+
+
+                        <Separator Margin="25" DockPanel.Dock="Top" Height="0.8"
+                                           Background="AliceBlue"/>
+
+
+                        <StackPanel DockPanel.Dock="Top">
+                            <Button Command="{Binding ProductsCommand}"
+                                Style="{StaticResource menuButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Icon:PackIconMaterial Kind="BasketOutline" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Товары"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button Command="{Binding CategoriesCommand}"
+                                Style="{StaticResource menuButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Icon:PackIconMaterial Kind="FormatListBulleted" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Категории"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button Command="{Binding CharacersCommand}"
+                                    Style="{StaticResource menuButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Icon:PackIconMaterial Kind="Tune" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Характеристики"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button Command="{Binding AccountsCommand}"
+                                    Style="{StaticResource menuButton}"
+                                    Visibility="{Binding CurrentAdmin.Role, Converter={StaticResource RoleToVisibility}}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Icon:PackIconMaterial Kind="AccountCircleOutline" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Администраторы"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button Command="{Binding RequestsCommand}"
+                                    Style="{StaticResource menuButton}"
+                                    Visibility="{Binding CurrentAdmin.Role, Converter={StaticResource RoleToVisibility}}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Icon:PackIconMaterial Kind="ClipboardTextOutline" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Заявки на товары"/>
+                                </StackPanel>
+                            </Button>
+
+
+                            <Button Command="{Binding DataProcessingComand}"
+                                    Style="{StaticResource menuButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Icon:PackIconMaterial Kind="Database " Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Обработка данных"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        
+                        <Button 
+                            Command="{Binding QuitCommand}"
+                            Style="{StaticResource menuButton}"
+                                    VerticalAlignment="Bottom"
+                                    DockPanel.Dock="Bottom"
+                                    Margin="15 0 15 20">
+                            <StackPanel Orientation="Horizontal">
+                                <Icon:PackIconMaterial Kind="Logout" Style="{StaticResource menuButtonIcon}"/>
+                                <TextBlock Text="Выход"/>
+                            </StackPanel>
+                        </Button>
+                    </DockPanel>
+
+                    <DockPanel x:Name="CloseMenuState" Visibility="Collapsed" HorizontalAlignment="Left" Width="50">
+
+                        <StackPanel Width="50" DockPanel.Dock="Left"
+                                        VerticalAlignment="Center">
+                            <Button Command="{Binding ProductsCommand}" Style="{StaticResource miniMenuButton}">
+                                <Icon:PackIconMaterial Kind="BasketOutline" Style="{StaticResource miniMenuButtonIcon}"/>
+                            </Button>
+
+                            <Button Command="{Binding CategoriesCommand}" Style="{StaticResource miniMenuButton}">
+                                <Icon:PackIconMaterial Kind="FormatListBulleted" Style="{StaticResource miniMenuButtonIcon}"/>
+                            </Button>
+
+                            <Button Command="{Binding CharacersCommand}" Style="{StaticResource miniMenuButton}" Background="#7b5cd6">
+                                <Icon:PackIconMaterial Kind="Tune" Style="{StaticResource miniMenuButtonIcon}"/>
+                            </Button>
+
+                            <Button Command="{Binding AccountsCommand}" Style="{StaticResource miniMenuButton}"
+                                    Visibility="{Binding CurrentAdmin.Role, Converter={StaticResource RoleToVisibility}}">
+                                <Icon:PackIconMaterial Kind="AccountCircleOutline" Style="{StaticResource miniMenuButtonIcon}"/>
+                            </Button>
+
+                            <Button Command="{Binding RequestsCommand}" Style="{StaticResource miniMenuButton}"
+                                    Visibility="{Binding CurrentAdmin.Role, Converter={StaticResource RoleToVisibility}}">
+                                <Icon:PackIconMaterial Kind="ClipboardTextOutline" Style="{StaticResource miniMenuButtonIcon}"/>
+                            </Button>
+
+                            <Button Command="{Binding DataProcessingComand}" Style="{StaticResource miniMenuButton}">
+                                <Icon:PackIconMaterial Kind="Database" Style="{StaticResource miniMenuButtonIcon}"/>
+                            </Button>
+
+                        </StackPanel>
+                    </DockPanel>
+
+                </Grid>
+
+            </Border>
+
+        </Grid>
+
+
+        <Grid x:Name="grid" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/> 
+            </Grid.RowDefinitions>
+            <Button Style="{DynamicResource closeWindowButton}"
+                        Margin="10 10 15 0"
+                        HorizontalAlignment="Left"
+                        Click="ToggleMenuVisibility">
+                <Icon:PackIconMaterial Kind="Menu"/>
+            </Button>
+
+            <Button Style="{DynamicResource closeWindowButton}"
+                        Margin="0 10 15 0"
+                        HorizontalAlignment="Right"
+                        Click="Close_Click">
+                <Icon:PackIconMaterial Kind="Close"/>
+            </Button>
+            
+            <Button Style="{DynamicResource closeWindowButton}"
+                        Margin="0 10 55 0"
+                        HorizontalAlignment="Right"
+                        Click="FullScreen_Click">
+                <Icon:PackIconMaterial Kind="Fullscreen"/>
+            </Button>
+
+
+            <ContentControl
+                Grid.Row="1"
+                Content="{Binding CurrentView}">
+                <ContentControl.ContentTemplate>
+                    <DataTemplate>
+                        <ContentControl Content="{Binding}">
+                            <ContentControl.Resources>
+                                <DataTemplate DataType="{x:Type viewModelAdmin:ProductsViewModel}">
+                                    <viewAdmin:ProductsView/>
+                                </DataTemplate>
+
+                                <DataTemplate DataType="{x:Type viewModelAdmin:CategoriesViewModel}">
+                                    <viewAdmin:CategoriesView/>
+                                </DataTemplate>
+
+                                <DataTemplate DataType="{x:Type viewModelAdmin:CharactersViewModel}">
+                                    <viewAdmin:CharactersView/>
+                                </DataTemplate>
+
+                                <DataTemplate DataType="{x:Type viewModelAdmin:AccountsViewModel}">
+                                    <viewAdmin:AccountsView/>
+                                </DataTemplate>
+
+                                <DataTemplate DataType="{x:Type viewModelAdmin:RequestsViewModel}">
+                                    <viewAdmin:RequestsView/>
+                                </DataTemplate>
+
+                                <DataTemplate DataType="{x:Type viewModelAdmin:DataProcessingViewModel}">
+                                    <viewAdmin:DataProcessingView/>
+                                </DataTemplate>
+                            </ContentControl.Resources>
+                        </ContentControl>
+                    </DataTemplate>
+                </ContentControl.ContentTemplate>
+            </ContentControl>
+
+
+        </Grid>
+    </Grid>
+
+</Window>

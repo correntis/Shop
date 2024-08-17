@@ -1,0 +1,352 @@
+﻿<UserControl x:Class="Shop.MVVM.View.AdminApp.RequestsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Shop.MVVM.View.AdminApp"
+             xmlns:viewModel="clr-namespace:Shop.MVVM.ViewModel.AdminApp"
+             xmlns:Converter="clr-namespace:Shop.Converters"
+             xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:Xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             d:DataContext="{d:DesignInstance Type=viewModel:RequestsViewModel}"
+             d:Background="White"
+             mc:Ignorable="d" 
+             d:DesignHeight="670" d:DesignWidth="890">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <Converter:ByteArrayToImageSourceConverter x:Key="BitToImage"/>
+    </UserControl.Resources>
+
+    <Border>
+        <Grid Grid.Column="1" Margin="10 0 20 20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="150"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal" Margin="30 15">
+                <TextBlock Text="Заявки на товары" FontSize="28"
+                           FontWeight="SemiBold" Margin="10 0 0 0"
+                           HorizontalAlignment="Left"
+                           Foreground="#121518"/>
+            </StackPanel>
+
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1.5*"/>
+                    <RowDefinition Height="1.5*"/>
+                </Grid.RowDefinitions>
+
+                <Separator Grid.Row="0" VerticalAlignment="Top" Height="1"
+                        Background="LightGray"/>
+
+                <Grid Grid.Row="0" Margin="40 5 40 5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+
+                    <!--STATUS-->
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+
+                        <TextBlock
+                                    Text="Статус"
+                                    FontSize="15"
+                                    FontWeight="Bold"
+                                    HorizontalAlignment="Center"
+                                    Foreground="#121315"/>
+
+                        <Border Grid.Row="1"  Margin="20 0" 
+                                Style="{StaticResource borderInput}">
+                            <ComboBox
+                                  Style="{StaticResource ComboBoxFlatStyle}"
+                                  FontSize="17"
+                                  ItemsSource="{Binding StatusOptions}" 
+                                  SelectedItem="{Binding StatusFilter, Mode=TwoWay}"/>
+                        </Border>
+                    </Grid>
+
+                    <!--AMOUNT-->
+                    <Grid Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+
+                        <TextBlock
+                                    Text="Кол-во постранично"
+                                    FontSize="15"
+                                    FontWeight="Bold"
+                                    HorizontalAlignment="Center"
+                                    Foreground="#121315"/>
+
+                        <Border Grid.Row="1"  Margin="20 0" 
+                                Style="{StaticResource borderInput}">
+                            <ComboBox
+                                  Style="{StaticResource ComboBoxFlatStyle}"
+                                  FontSize="17"
+                                  ItemsSource="{Binding ItemsPerPageOptions}" 
+                                  SelectedItem="{Binding ItemsOnPage, Mode=TwoWay}"/>
+                        </Border>
+                    </Grid>
+                </Grid>
+
+
+                <Grid Grid.Row="1">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <Button 
+                            Command="{Binding FilterCommand}"
+                            Style="{StaticResource filtersSearchButton}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Поиск по полям"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button 
+                            Command="{Binding ClearFilterCommand}"
+                            Margin="10 0 0 0"
+                            Style="{StaticResource filtersClearButton}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Сбросить фильтры"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+                <Separator Grid.Row="1" VerticalAlignment="Bottom" Height="1"
+                           Background="LightGray"/>
+            </Grid>
+
+            <!--<Separator Height="1" Grid.Row="3" Background="#dae2ea"
+                           Margin="0 -1 0 10"/>-->
+
+
+            <Grid  Grid.Row="2" HorizontalAlignment="Center">
+                <DataGrid Style="{StaticResource DataGridStyle1}" 
+                          CellStyle="{StaticResource DataGridCellStyleMedium}" 
+                          ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle1}" 
+                          RowStyle="{StaticResource DataGridRowStyle1}" 
+                          x:Name="membersDataGrid"
+                          ItemsSource="{Binding PagingRequests}"
+                          GridLinesVisibility="None" 
+                          Foreground="Black">
+                    <DataGrid.Columns>
+
+                        <DataGridTemplateColumn Header="Действия" 
+                                                IsReadOnly="True"
+                                                Width="150"
+                                                CanUserResize="False">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <StackPanel>
+                                            <Button Command="{Binding DataContext.ProcessRequestStatusCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                                    CommandParameter="{Binding}"
+                                                    Style="{StaticResource gridEditButton}"
+                                                    Width="110">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource gridButtonIcon}"/>
+                                                    <TextBlock Text="В обработку"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <Button Command="{Binding DataContext.ComlepeteRequestStatusCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                                    CommandParameter="{Binding}"
+                                                    Style="{StaticResource gridRemoveButton}" Margin="0 5 0 0">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
+                                                    <TextBlock Text="Завершить"/>
+                                                </StackPanel>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="Id"
+                                                IsReadOnly="True"
+                                                CanUserResize="False"
+                                                Width="auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Top">
+                                        <StackPanel Orientation="Horizontal" Margin="5 5">
+                                            <TextBlock TextWrapping="Wrap" 
+                                                       FontSize="15"
+                                                       Text="{Binding Id}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+
+                        <DataGridTemplateColumn Header="Дата"
+                                                IsReadOnly="True"
+                                                CanUserResize="False"
+                                                Width="auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
+                                        <StackPanel Orientation="Horizontal" Margin="5 5">
+                                            <TextBlock TextWrapping="Wrap" 
+                                                       FontSize="13"
+                                                       MaxWidth="100"
+                                                 Text="{Binding Date,StringFormat='yyyy-MM-dd HH:mm:ss'}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        
+
+                        <DataGridTemplateColumn Header="Пользователь"
+                                                IsReadOnly="True"
+                                                CanUserResize="False"
+                                                Width="auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
+                                        <StackPanel Orientation="Vertical" Margin="5 5">
+                                            <TextBlock TextWrapping="Wrap" 
+                                                       FontSize="20">
+                                                <Run Text="{Binding User.Name}"/>
+                                                <Run Text="{Binding User.Surname}"/>
+                                            </TextBlock>
+
+                                            <TextBlock TextWrapping="Wrap" 
+                                                       FontSize="15">
+                                                <Run Text="Телефон: "/>
+                                                <Run FontSize="17" FontWeight="Bold" Text="{Binding User.Phone}"/>
+                                            </TextBlock>
+
+
+                                            <TextBlock TextWrapping="Wrap" 
+                                                       FontSize="15">
+                                                <Run Text="Почта: "/>
+                                                <Run FontSize="17" FontWeight="Bold" Text="{Binding User.Email}"/>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+
+                        <DataGridTemplateColumn Header="Товар"
+                                                IsReadOnly="True"
+                                                CanUserResize="False"
+                                                Width="auto"
+                                                MaxWidth="800">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
+                                        <StackPanel Orientation="Vertical" Margin="5 5">
+                                            <TextBlock TextWrapping="Wrap" 
+                                                       FontSize="20">
+                                                <Run Text="{Binding Product.Name}"/>
+                                            </TextBlock>
+
+                                            <TextBlock TextWrapping="Wrap" 
+                                                       FontSize="15">
+                                                <Run Text="Артикул: "/>
+                                                <Run FontSize="17" FontWeight="Bold" Text="{Binding Product.Code}"/>
+                                            </TextBlock>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock TextWrapping="Wrap" 
+                                                               FontSize="15">
+                                                        <Run Text="Id: "/>
+                                                        <Run FontSize="17" FontWeight="Bold" Text="{Binding Product.Id}"/>
+                                                </TextBlock>
+                                                <TextBlock TextWrapping="Wrap" Margin="30 0 0 0"
+                                                               FontSize="15">
+                                                        <Run Text="В наличии сейчас: "/>
+                                                        <Run FontSize="17" FontWeight="Bold" Text="{Binding Product.Quantity}"/>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header=""
+                                    IsReadOnly="True"
+                                    CanUserResize="False"
+                                    Width="40">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Border Width="30" HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center">
+                                            <Icon:PackIconMaterial Width="25" Height="25">
+                                                <Icon:PackIconMaterial.Style>
+                                                    <Style TargetType="Icon:PackIconMaterial">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Status}" Value="2">
+                                                                <Setter Property="Kind" Value="CheckboxMarked" />
+                                                                <Setter Property="Foreground" Value="#2ecc71" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}" Value="0">
+                                                                <Setter Property="Kind" Value="CloseBoxOutline" />
+                                                                <Setter Property="Foreground" Value="#ff0000" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}" Value="1">
+                                                                <Setter Property="Kind" Value="CommentEdit" />
+                                                                <Setter Property="Foreground" Value="#cccc00" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Icon:PackIconMaterial.Style>
+                                            </Icon:PackIconMaterial>
+                                        </Border>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+
+            <Border Grid.Row="3" HorizontalAlignment="Right" 
+                        BorderBrush="#dee4ec"
+                        BorderThickness="1" CornerRadius="5" Padding="5" 
+                        Background="White"
+                        Margin="0 10 10 10">
+
+
+
+                <StackPanel Orientation="Horizontal">
+                    <Button Command="{Binding PrevPageCommand}" Style="{StaticResource pagingButton}">
+                        <Icon:PackIconMaterial Kind="ChevronLeft" Style="{StaticResource pagingButtonIcon}"/>
+                    </Button>
+
+
+                    <TextBlock Text="{Binding PagingRequests.CurrentPage}" TextAlignment="Center" Foreground="#6c7682" VerticalAlignment="Center"
+                   FontSize="15" FontWeight="Bold" Width="20"/>
+
+
+                    <Button Command="{Binding NextPageCommand}" Style="{StaticResource pagingButton}">
+                        <Icon:PackIconMaterial Kind="ChevronRight" Style="{StaticResource pagingButtonIcon}"/>
+                    </Button>
+
+
+                </StackPanel>
+            </Border>
+
+        </Grid>
+
+    </Border>
+</UserControl>

@@ -1,0 +1,202 @@
+@startuml т
+
+skinparam class {
+    BackgroundColor White
+    BorderColor Black
+    ArrowColor Black
+    FontName Arial
+    FontSize 20
+    FontStyle Bold
+}
+
+class Admin {
+    int Id
+    int Role
+    DateTime CreatedAt
+    int Added
+    int Deleted
+    string Name
+    AdminAccount AdminAccount
+    AdminProduct[] AdminProducts
+}
+
+class AdminAccount {
+    int Id
+    string Login
+    string Password
+    int AdminsId
+    Admin Admin
+}
+
+class AdminProduct {
+    int Id
+    int AdminsId
+    int ProductsId
+    DateTime Date
+    Admin Admin
+    Product Product
+}
+
+class Product {
+    int Id
+    string Name
+    string Brand
+    string Code
+    string Description
+    decimal Price
+    string Producer
+    string Country
+    int Quantity
+    byte[] Image
+    int Status
+    Category[] Categories
+    CharacterValue[] CharacterValues
+    Review[] Reviews
+    AdminProduct[] AdminProducts
+    UserProduct[] UserProducts
+    OrderItem[] OrderItems
+    Request[] Requests
+}
+
+class OrderItem {
+    int Id
+    int OrdersId
+    int ProductsId
+    int Quantity
+    Product Product
+}
+
+class Category {
+    int Id
+    string Name
+    bool ShowOnMain
+    byte[] Image
+    Product[] Products
+    Character[] Characters
+}
+
+class Character {
+    int Id
+    string Name
+    Category[] Categories
+    CharacterValue[] CharacterValues
+}
+
+class CharacterValue {
+    int Id
+    int CharactersId
+    string Value
+    Character Character
+    Product[] Products
+}
+
+class DeliveryInfo {
+    int Id
+    int UsersId
+    string City
+    string Street
+    string House
+    string Apart
+    string Floor
+    string IntercomCode
+    bool SkipRequired
+}
+
+class Order {
+    int Id
+    int UsersId
+    DateTime Date
+    int Status
+    decimal Price
+    User User
+    OrderItem[] OrderItems
+}
+
+class OrderItem {
+    int Id
+    int OrdersId
+    int ProductsId
+    int Quantity
+    Order Order
+    Product Product
+}
+
+class User {
+    int Id
+    string Name
+    string Email
+    DeliveryInfo DeliveryInfo
+    Order[] Orders
+}
+
+class Request {
+    int Id
+    DateTime Date
+    User User
+    Product Product
+}
+
+class Review{
+    int Id
+    string Value
+    DateTime Date
+    User User
+    Product Product
+}
+
+class User{
+    string Name
+    string Surname
+    string Phone
+    string Email
+    byte[] Avatar
+    UserProduct[] UserProducts
+    UserAccount UserAccount
+    DeliveryInfo DeliveryInfo
+    Review[] Reviews
+    Order[] Orders
+    Request[] Requests
+}
+
+class UserProduct{
+    int Id
+    int Quantity
+    User User
+    Product Product
+}
+
+class UserAccount {
+    int Id
+    string Login
+    string Password
+    int UsersId
+    User User
+}
+
+
+Admin "1" -- "1" AdminAccount 
+Admin "1" -- "0..*" AdminProduct 
+Product "1" -- "0..*" AdminProduct
+Product "0..*" -- "0..*" Request
+Product "0..*" -- "0..*" Review
+Product "0..*" -- "0..*" UserProduct
+Category "1" -- "0..*" Product 
+Category "0..*" -- "0..*" Character
+Character "1" -- "0..*" CharacterValue
+CharacterValue "1" -- "1" Character 
+CharacterValue "0..*" -- "0..*" Product
+Character "0..*" -- "0..*" Category 
+DeliveryInfo "1" -- "1" User 
+Order "1" -- "1" User 
+Order "1" -- "0..*" OrderItem
+OrderItem "1" -- "1" Order 
+OrderItem "1" -- "1" Product
+User "1" -- "0..1" DeliveryInfo
+User "1" -- "0..*" Order 
+User "1" -- "0..*" Request
+User "0..*" -- "0..*" Review
+User "1" -- "1" UserAccount
+User "1" -- "0..*" UserProduct
+
+
+@enduml

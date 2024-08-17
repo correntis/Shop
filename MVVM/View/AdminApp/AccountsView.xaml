@@ -1,0 +1,158 @@
+﻿<UserControl x:Class="Shop.MVVM.View.AdminApp.AccountsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Shop.MVVM.View.AdminApp"
+             xmlns:viewModel="clr-namespace:Shop.MVVM.ViewModel.AdminApp"
+             xmlns:view="clr-namespace:Shop.MVVM.View.AdminApp"
+             xmlns:Converter="clr-namespace:Shop.Converters"
+             xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:Xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             d:DataContext="{d:DesignInstance Type=viewModel:AccountsViewModel}"
+             d:Background="White"
+             mc:Ignorable="d" 
+             d:DesignHeight="670" d:DesignWidth="890">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <Converter:ByteArrayToImageSourceConverter x:Key="BitToImage"/>
+    </UserControl.Resources>
+
+    <Border>
+        <Grid Grid.Column="1" Margin="10 0 20 20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal" Margin="30 15">
+                <TextBlock Text="Администраторы" FontSize="28"
+                           FontWeight="SemiBold" Margin="10 0 0 0"
+                           HorizontalAlignment="Left"
+                           Foreground="#121518"/>
+
+                <Button 
+                    Command="{Binding AddCommand}"
+                    Margin="30 0"
+                    Style="{StaticResource addButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <Icon:PackIconMaterial Kind="Plus" 
+                                   VerticalAlignment="Center"
+                                   Width="17"
+                                   Height="17"
+                                   Margin="0 1 10 0"/>
+                        <TextBlock Text="Добавить"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+            <ContentControl
+                 Grid.Row="1"
+                 Content="{Binding CurrentView}">
+                <ContentControl.ContentTemplate>
+                    <DataTemplate>
+                        <ContentControl Content="{Binding}">
+                            <ContentControl.Resources>
+                                <DataTemplate DataType="{x:Type viewModel:AddAdminViewModel}">
+                                    <view:AddAdminView/>
+                                </DataTemplate>
+                            </ContentControl.Resources>
+                        </ContentControl>
+                    </DataTemplate>
+                </ContentControl.ContentTemplate>
+            </ContentControl>
+
+            <Grid  Grid.Row="2" HorizontalAlignment="Center">
+                <DataGrid Style="{StaticResource DataGridStyle1}" 
+                          CellStyle="{StaticResource DataGridCellStyleLittle}" 
+                          ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle1}" 
+                          RowStyle="{StaticResource DataGridRowStyle1}" 
+                          x:Name="membersDataGrid"
+                          ItemsSource="{Binding Admins}"
+                          GridLinesVisibility="None" 
+                          Foreground="Black">
+                    <DataGrid.Columns>
+
+                        <DataGridTemplateColumn Header="Действия" 
+                                                IsReadOnly="True"
+                                                Width="150"
+                                                CanUserResize="False">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <StackPanel>
+                                            <Button Command="{Binding DataContext.RemoveCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                                    CommandParameter="{Binding}"
+                                                    Style="{StaticResource gridRemoveButton}" Margin="0 10 0 0">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource gridButtonIcon}"/>
+                                                    <TextBlock Text="Удалить"/>
+                                                </StackPanel>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="Id"
+                                                IsReadOnly="True"
+                                                CanUserResize="False"
+                                                Width="auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal" Margin="5 5">
+                                            <TextBlock TextWrapping="Wrap" 
+                                                       FontSize="15"
+                                                       Text="{Binding Id}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="Имя"
+                                                IsReadOnly="True"
+                                                CanUserResize="False"
+                                                Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal" Margin="5 5">
+                                            <TextBlock TextWrapping="Wrap" 
+                                                       FontSize="17"
+                                                 Text="{Binding Name}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+
+                        <DataGridTemplateColumn Header="Дата создания"
+                                                IsReadOnly="True"
+                                                CanUserResize="False"
+                                                Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal" Margin="5 5">
+                                            <TextBlock TextWrapping="Wrap" 
+                                                       FontSize="17"
+                                                 Text="{Binding CreatedAt,StringFormat='yyyy-MM-dd HH:mm:ss'}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>
+

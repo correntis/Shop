@@ -1,0 +1,286 @@
+﻿<Window x:Class="Shop.UserApp.UserWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Shop.UserApp"
+        mc:Ignorable="d"
+                xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:Xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:viewModelUser="clr-namespace:Shop.MVVM.ViewModel.UserApp"
+        xmlns:viewUser="clr-namespace:Shop.MVVM.View.UserApp"
+        xmlns:Converter="clr-namespace:Shop.Converters"
+        d:DataContext="{d:DesignInstance Type=viewModelUser:UserAppViewModel}"
+        xmlns:ChromeTab="clr-namespace:ChromeTabs;assembly=ChromeTabs"
+        xmlns:Syncfusion="clr-namespace:Syncfusion.Windows.Tools.Controls;assembly=Syncfusion.Tools.Wpf"
+         Height="800" Width="1200"
+         WindowStartupLocation="CenterScreen"
+         WindowStyle="None"
+         AllowsTransparency="True">
+
+    <Window.Resources>
+        <Converter:AdminRoleToVisibilityConverter x:Key="RoleToVisibility"/>
+
+        <Style TargetType="TabControl">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabControl">
+                        <Grid KeyboardNavigation.TabNavigation="Local" SnapsToDevicePixels="True">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <ScrollViewer HorizontalScrollBarVisibility="Auto" 
+                                          VerticalScrollBarVisibility="Disabled" Grid.Row="0">
+                                <TabPanel Name="HeaderPanel" 
+                                          Panel.ZIndex="1" 
+                                          Background="Transparent"
+                                          IsItemsHost="True" 
+                                          KeyboardNavigation.TabIndex="1" 
+                                          Margin="0,0,4,-1"/>
+                            </ScrollViewer>
+                            <ContentPresenter 
+                                Grid.Row="1" 
+                                Name="PART_SelectedContentHost" 
+                                ContentSource="SelectedContent" 
+                                Margin="2" 
+                                KeyboardNavigation.TabNavigation="Local"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="TabItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border Name="Border" Background="LightGray" Margin="3 0 0 0" Padding="10 0 3 0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter ContentSource="Header" VerticalAlignment="Center" Margin="0"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#f2f2f2"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter TargetName="Border" Property="Background" Value="#d9d9d9"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#b3b3b3"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        
+        
+    </Window.Resources>
+     <Grid x:Name="grid1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid>
+            <Border Width="200" x:Name="SideMenu" Grid.Row="1"
+                        Background="#7b5cd6">
+
+                <Grid x:Name="LeftMenuContainer">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <DockPanel x:Name="OpenMenuState" >
+
+                        <StackPanel DockPanel.Dock="Top">
+
+                            <TextBlock Text="500amper.by"
+                                       Foreground="White" FontSize="22"
+                                        FontWeight="SemiBold" DockPanel.Dock="Top" TextAlignment="Center"
+                                        Margin="5 25 0 10"/>
+                            <TextBlock x:Name="MenuUserRole_TextBox" Text="Пользователь"
+                                           Foreground="#d0bfff" FontSize="14"
+                                       FontWeight="SemiBold" TextAlignment="Center" Height="20"/>
+                        </StackPanel>
+
+                        <Separator Margin="25" DockPanel.Dock="Top" Height="0.8"
+                                           Background="AliceBlue"/>
+
+
+                        <StackPanel DockPanel.Dock="Top">
+                            <Button Command="{Binding CategoriesCatalogCommand}"
+                                Style="{StaticResource menuButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Icon:PackIconMaterial Kind="Home" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Категории"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button Command="{Binding AccountCommand}"
+                                Style="{StaticResource menuButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Icon:PackIconMaterial Kind="Account" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Личный кабинет"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button Command="{Binding UserProductsCommand}"
+                                    Style="{StaticResource menuButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Icon:PackIconMaterial Kind="Sitemap" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Корзина"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
+                        <Button 
+                            Command="{Binding QuitCommand}"
+                            Style="{StaticResource menuButton}"
+                                    VerticalAlignment="Bottom"
+                                    DockPanel.Dock="Bottom"
+                                    Margin="15 0 15 20">
+                            <StackPanel Orientation="Horizontal">
+                                <Icon:PackIconMaterial Kind="Logout" Style="{StaticResource menuButtonIcon}"/>
+                                <TextBlock Text="Выход"/>
+                            </StackPanel>
+                        </Button>
+                    </DockPanel>
+
+                    <DockPanel x:Name="CloseMenuState"
+                               HorizontalAlignment="Left" 
+                               VerticalAlignment="Center" Width="50"
+                               Visibility="Collapsed">
+
+                        <StackPanel Width="50" DockPanel.Dock="Top"
+                                        VerticalAlignment="Center">
+                            <Button Command="{Binding CategoriesCatalogCommand}" Style="{StaticResource miniMenuButton}">
+                                <Icon:PackIconMaterial Kind="Home" Style="{StaticResource miniMenuButtonIcon}"/>
+                            </Button>
+
+                            <Button Command="{Binding AccountCommand}" Style="{StaticResource miniMenuButton}">
+                                <Icon:PackIconMaterial Kind="Account" Style="{StaticResource miniMenuButtonIcon}"/>
+                            </Button>
+
+                            <Button Command="{Binding UserProductsCommand}" Style="{StaticResource miniMenuButton}">
+                                <Icon:PackIconMaterial Kind="Sitemap" Style="{StaticResource miniMenuButtonIcon}"/>
+                            </Button>
+
+                        </StackPanel>
+
+                        <Button Margin="0 200 0 0"
+                                HorizontalAlignment="Center"
+                                Command="{Binding QuitCommand}" Style="{StaticResource miniMenuButton}">
+                            <Icon:PackIconMaterial Kind="Logout" Style="{StaticResource miniMenuButtonIcon}"/>
+                        </Button>
+                    </DockPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+
+        <Grid x:Name="grid" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+
+            <Grid>
+                <Button Style="{DynamicResource closeWindowButton}"
+                        Margin="10 10 15 0"
+                        HorizontalAlignment="Left"
+                        Click="ToggleMenuVisibility">
+                    <Icon:PackIconMaterial Kind="Menu"/>
+                </Button>
+                
+                
+
+                <Button Style="{DynamicResource closeWindowButton}"
+                        Margin="0 10 15 0"
+                        HorizontalAlignment="Right"
+                        Click="Close_Click">
+                    <Icon:PackIconMaterial Kind="Close"/>
+                </Button>
+
+                <Button Style="{DynamicResource closeWindowButton}"
+                        Margin="0 10 55 0"
+                        HorizontalAlignment="Right"
+                        Click="FullScreen_Click">
+                    <Icon:PackIconMaterial Kind="Fullscreen"/>
+                </Button>
+
+                <Button Command="{Binding ResetAppCommand}"
+                    Style="{DynamicResource closeWindowButton}"
+                        Margin="0 10 95 0"
+                        HorizontalAlignment="Right">
+                    <Icon:PackIconMaterial Kind="Update"/>
+                </Button>
+            </Grid>
+
+
+            <TabControl Grid.Row="1"
+                        ItemsSource="{Binding TabViewModels}"
+                        SelectedIndex="{Binding SelectedTab, UpdateSourceTrigger=PropertyChanged}">
+                <TabControl.Resources>
+                    <DataTemplate DataType="{x:Type viewModelUser:CategoriesCatalogViewModel}">
+                        <viewUser:CategoriesCatalogView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewModelUser:ProductsCatalogViewModel}">
+                        <viewUser:ProductsCatalogView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewModelUser:ProductCardViewModel}">
+                        <viewUser:ProductCardView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewModelUser:AccountViewModel}">
+                        <viewUser:AccountView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type viewModelUser:UserProductsViewModel}">
+                        <viewUser:UserProductsView/>
+                    </DataTemplate>
+                </TabControl.Resources>
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="Transparent" MaxWidth="180" Height="30">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="20"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5 0 5 1">
+                                    <TextBlock FontSize="13" FontWeight="DemiBold" Text="{Binding Title}" Width="90"
+                                       TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" HorizontalAlignment="Left"
+                                               VerticalAlignment="Center">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip Content="{Binding Title}" />
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
+                                </Grid>
+                                <Grid Grid.Column="1">
+                                    <Button Command="{Binding DataContext.CloseTabCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                            CommandParameter="{Binding }"
+                                        Grid.Column="1"
+                                            Style="{DynamicResource tabCloseButton}"
+                                        HorizontalAlignment="Center">
+                                        <Icon:PackIconMaterial Kind="Close" Height="10" Width="10"
+                                                               HorizontalAlignment="Center" 
+                                                               VerticalAlignment="Center"/>
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+            </TabControl>
+        </Grid>
+    </Grid>
+
+</Window>
+

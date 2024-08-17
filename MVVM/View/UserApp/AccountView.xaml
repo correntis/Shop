@@ -1,0 +1,619 @@
+﻿<UserControl x:Class="Shop.MVVM.View.UserApp.AccountView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Shop.MVVM.View.UserApp"
+             xmlns:userapp="clr-namespace:Shop.MVVM.ViewModel.UserApp"
+             xmlns:Converter="clr-namespace:Shop.Converters"
+             xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:Xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:materialDesing="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=userapp:AccountViewModel}"
+             d:DesignHeight="800" d:DesignWidth="800"
+             d:Background="White">
+
+    <UserControl.Resources>
+        <Converter:ByteArrayToImageSourceConverter x:Key="ByteToImage"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+    </UserControl.Resources>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <Border Padding="40 5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="auto"/>
+
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Grid Background="#ececec" Opacity="0.7">
+                    <TextBlock Text="Личный кабинет" FontSize="30" HorizontalAlignment="Center"/>
+                </Grid>
+
+                <Grid Grid.Row="1"  MaxHeight="450" MaxWidth="950" VerticalAlignment="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.3*"/>
+                        <ColumnDefinition Width="0.7*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Margin="0 10 0 0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="180"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <Viewbox Grid.Row="0" Width="170" Height="170" VerticalAlignment="Top" Margin="0 0 0 10">
+                                <Ellipse StrokeThickness="2" Stroke="Black" Width="170" Height="170">
+                                    <Ellipse.Fill>
+                                        <ImageBrush ImageSource="{Binding User.Avatar, Converter={StaticResource ByteToImage}}" />
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                            </Viewbox>
+
+                            <Button Grid.Row="1" Command="{Binding ChangePhotoCommand}"
+                            Style="{StaticResource gridCharactersButton}"
+                            Content="Выбрать фото"/>
+
+                            <Button Grid.Row="2" Command="{Binding ShowPasswordCommand}"
+                                    Style="{StaticResource gridCharactersButton}"
+                                    Content="Смена пароля"/>
+
+                            <Grid Grid.Row="3" Height="30" Margin="0 20 0 0">
+                                <TextBlock HorizontalAlignment="Center" FontSize="15">
+                                <Run Text="Заказов: "/>
+                                <Run FontSize="20" Text="{Binding User.Orders.Count, Mode=OneWay}"/>
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ShowChangePassword}" Value="True">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding ShowChangePassword}" Value="False">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Grid>
+
+                            <Grid Grid.Row="4" Height="30" Margin="0">
+                                <TextBlock  FontSize="15" HorizontalAlignment="Center">
+                                <Run Text="Товаров в корзине:"/>
+                                <Run FontSize="20" Text="{Binding User.UserProducts.Count, Mode=OneWay}"/>
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ShowChangePassword}" Value="True">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding ShowChangePassword}" Value="False">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Grid>
+
+                            <Grid Grid.Row="3" Visibility="{Binding ShowChangePassword, Converter={StaticResource BoolToVisibility}}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="65"/>
+                                    <RowDefinition Height="65"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="0.8*"/>
+                                        <RowDefinition Height="45"/>
+                                    </Grid.RowDefinitions>
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock
+                                Foreground="#121315"
+                                VerticalAlignment="Bottom"
+                                Text="Старый пароль"
+                                FontSize="17"
+                                FontWeight="DemiBold"
+                                HorizontalAlignment="Left"
+                                Margin="5 0 0 0"/>
+
+                                    </StackPanel>
+
+                                    <Grid Grid.Row="1" Margin="0 5 20 10">
+                                        <Border>
+                                            <Xctk:WatermarkPasswordBox x:Name="OldPassword" FontSize="14" 
+                                                         Watermark="Старый пароль"
+                                                                       PasswordChanged="OldPassword_PasswordChanged"
+                                                                       Style="{StaticResource watermarkTextBoxInput}"/>
+                                            <Border.Style>
+                                                <Style TargetType="Border" BasedOn="{StaticResource borderPassword}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ErrorPassword}" Value="True">
+                                                            <Setter Property="BorderBrush" Value="Red"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                        </Border>
+                                    </Grid>
+                                </Grid>
+
+                                <Grid Grid.Row="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="0.8*"/>
+                                        <RowDefinition Height="45"/>
+                                    </Grid.RowDefinitions>
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock
+                                Foreground="#121315"
+                                VerticalAlignment="Bottom"
+                                Text="Новый пароль"
+                                FontSize="17"
+                                FontWeight="DemiBold"
+                                HorizontalAlignment="Left"
+                                Margin="5 0 0 0"/>
+                                    </StackPanel>
+
+                                    <Grid Grid.Row="1" Margin="0 5 20 10">
+                                        <Border>
+                                            <Xctk:WatermarkPasswordBox x:Name="NewPassword" FontSize="14"
+                                                                       PasswordChanged="NewPassword_PasswordChanged" 
+                                                                       Watermark="Новый пароль"
+                                                                       Style="{StaticResource watermarkTextBoxInput}"/>
+                                            <Border.Style>
+                                                <Style TargetType="Border" BasedOn="{StaticResource borderPassword}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ErrorPassword}" Value="True">
+                                                            <Setter Property="BorderBrush" Value="Red"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                        </Border>
+                                    </Grid>
+                                </Grid>
+
+                                <Button Command="{Binding SavePasswordCommand}"
+                                    Grid.Row="2" Style="{StaticResource ProductActionOutStockButton}"
+                                        Height="30" Width="150" Content="Изменить пароль"/>
+                            </Grid>
+
+                        </Grid>
+                        <Button 
+                            Command="{Binding SaveInfoCommand}"
+                            Margin="0 0 0 10"
+                            VerticalAlignment="Bottom"
+                                Width="170"
+                                Style="{StaticResource ProductActionInStockButton}"
+                                Content="Сохранить"/>
+                    </Grid>
+
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Grid>
+                            <TextBlock Text="Персональный данные" FontSize="25" HorizontalAlignment="Left"/>
+                        </Grid>
+
+                        <Grid  Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="2*"/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                Foreground="#121315"
+                                VerticalAlignment="Bottom"
+                                Text="Имя"
+                                FontSize="17"
+                                FontWeight="DemiBold"
+                                HorizontalAlignment="Left"
+                                Margin="5 0 0 0"/>
+
+                                    <TextBlock 
+                                Text="{Binding (Validation.Errors).CurrentItem.ErrorContent, ElementName=NameTextBox}"
+                                Style="{StaticResource errorTextBox}"/>
+                                </StackPanel>
+
+                                <Grid Grid.Row="1" Margin="0 5 10 10">
+                                    <Border Style="{StaticResource borderInput}">
+                                        <Xctk:WatermarkTextBox x:Name="NameTextBox"
+                                                        Text="{Binding User.Name, UpdateSourceTrigger=PropertyChanged}" 
+                                                        Style="{StaticResource watermarkTextBoxInput}" Watermark="Имя"/>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="2*"/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                Foreground="#121315"
+                                VerticalAlignment="Bottom"
+                                Text="Фамилия"
+                                FontSize="17"
+                                FontWeight="DemiBold"
+                                HorizontalAlignment="Left"
+                                Margin="5 0 0 0"/>
+
+                                    <TextBlock 
+                                Text="{Binding (Validation.Errors).CurrentItem.ErrorContent, ElementName=SurnameTextBox}"
+                                Style="{StaticResource errorTextBox}"/>
+                                </StackPanel>
+
+                                <Grid Grid.Row="1" Margin="0 5 5 10">
+                                    <Border Style="{StaticResource borderInput}">
+                                        <Xctk:WatermarkTextBox x:Name="SurnameTextBox"
+                                                        Text="{Binding User.Surname, UpdateSourceTrigger=PropertyChanged}" 
+                                                        Style="{StaticResource watermarkTextBoxInput}" Watermark="Фамилия"/>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+
+                        <Grid Grid.Row="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="2*"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock
+                                Foreground="#121315"
+                                VerticalAlignment="Bottom"
+                                Text="Телефон"
+                                FontSize="17"
+                                FontWeight="DemiBold"
+                                HorizontalAlignment="Left"
+                                Margin="5 0 0 0"/>
+
+                                <TextBlock 
+                                Text="{Binding (Validation.Errors).CurrentItem.ErrorContent, ElementName=PhoneTextBox}"
+                                Style="{StaticResource errorTextBox}"/>
+                            </StackPanel>
+
+                            <Grid Grid.Row="1" Margin="0 5 10 10">
+                                <Border Style="{StaticResource borderInput}">
+                                    <Xctk:WatermarkTextBox x:Name="PhoneTextBox"
+                                                        Text="{Binding User.Phone, UpdateSourceTrigger=PropertyChanged}" 
+                                                        Style="{StaticResource watermarkTextBoxInput}" Watermark="Телефон"/>
+                                </Border>
+                            </Grid>
+                        </Grid>
+
+                        <Grid Grid.Row="3">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="2*"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock
+                                Foreground="#121315"
+                                VerticalAlignment="Bottom"
+                                Text="Email"
+                                FontSize="17"
+                                FontWeight="DemiBold"
+                                HorizontalAlignment="Left"
+                                Margin="5 0 0 0"/>
+
+                                <TextBlock 
+                                Text="{Binding (Validation.Errors).CurrentItem.ErrorContent, ElementName=EmailTextBox}"
+                                Style="{StaticResource errorTextBox}"/>
+                            </StackPanel>
+
+                            <Grid Grid.Row="1" Margin="0 5 5 10">
+                                <Border Style="{StaticResource borderInput}">
+                                    <Xctk:WatermarkTextBox x:Name="EmailTextBox"
+                                                        Text="{Binding User.Email, UpdateSourceTrigger=PropertyChanged}" 
+                                                        Style="{StaticResource watermarkTextBoxInput}" Watermark="Email"/>
+                                </Border>
+                            </Grid>
+                        </Grid>
+
+                        <Grid Grid.Row="4">
+                            <TextBlock Text="Данные для доставки" FontSize="25" HorizontalAlignment="Left"/>
+                        </Grid>
+
+                        <Grid  Grid.Row="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="2*"/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                Foreground="#121315"
+                                VerticalAlignment="Bottom"
+                                Text="Город"
+                                FontSize="17"
+                                FontWeight="DemiBold"
+                                HorizontalAlignment="Left"
+                                Margin="5 0 0 0"/>
+
+                                    <TextBlock 
+                                Text="{Binding (Validation.Errors).CurrentItem.ErrorContent, ElementName=CityTextBox}"
+                                Style="{StaticResource errorTextBox}"/>
+                                </StackPanel>
+
+                                <Grid Grid.Row="1" Margin="0 5 10 10">
+                                    <Border Style="{StaticResource borderInput}">
+                                        <Xctk:WatermarkTextBox x:Name="CityTextBox"
+                                                        Text="{Binding User.DeliveryInfo.City, UpdateSourceTrigger=PropertyChanged}" 
+                                                        Style="{StaticResource watermarkTextBoxInput}" Watermark="Город"/>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="2*"/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                Foreground="#121315"
+                                VerticalAlignment="Bottom"
+                                Text="Улица"
+                                FontSize="17"
+                                FontWeight="DemiBold"
+                                HorizontalAlignment="Left"
+                                Margin="5 0 0 0"/>
+
+                                    <TextBlock 
+                                Text="{Binding (Validation.Errors).CurrentItem.ErrorContent, ElementName=StreetTextBox}"
+                                Style="{StaticResource errorTextBox}"/>
+                                </StackPanel>
+
+                                <Grid Grid.Row="1" Margin="0 5 5 10">
+                                    <Border Style="{StaticResource borderInput}">
+                                        <Xctk:WatermarkTextBox x:Name="StreetTextBox"
+                                                        Text="{Binding User.DeliveryInfo.Street, UpdateSourceTrigger=PropertyChanged}" 
+                                                        Style="{StaticResource watermarkTextBoxInput}" Watermark="Улица"/>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+
+                        <Grid  Grid.Row="6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="2*"/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                Foreground="#121315"
+                                VerticalAlignment="Bottom"
+                                Text="Дом"
+                                FontSize="17"
+                                FontWeight="DemiBold"
+                                HorizontalAlignment="Left"
+                                Margin="5 0 0 0"/>
+
+                                    <TextBlock 
+                                Text="{Binding (Validation.Errors).CurrentItem.ErrorContent, ElementName=HouseTextBox}"
+                                Style="{StaticResource errorTextBoxUltra}"/>
+                                </StackPanel>
+
+                                <Grid Grid.Row="1" Margin="0 5 10 10">
+                                    <Border Style="{StaticResource borderInput}">
+                                        <Xctk:WatermarkTextBox x:Name="HouseTextBox"
+                                                        Text="{Binding User.DeliveryInfo.House, UpdateSourceTrigger=PropertyChanged}" 
+                                                        Style="{StaticResource watermarkTextBoxInput}" Watermark="Дом"/>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="2*"/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                Foreground="#121315"
+                                VerticalAlignment="Bottom"
+                                Text="Квартира"
+                                FontSize="17"
+                                FontWeight="DemiBold"
+                                HorizontalAlignment="Left"
+                                Margin="5 0 0 0"/>
+
+                                    <TextBlock 
+                                Text="{Binding (Validation.Errors).CurrentItem.ErrorContent, ElementName=ApartTextBox}"
+                                Style="{StaticResource errorTextBoxUltra}"/>
+                                </StackPanel>
+
+                                <Grid Grid.Row="1" Margin="0 5 5 10">
+                                    <Border Style="{StaticResource borderInput}">
+                                        <Xctk:WatermarkTextBox x:Name="ApartTextBox"
+                                                        Text="{Binding User.DeliveryInfo.Apart, UpdateSourceTrigger=PropertyChanged}" 
+                                                        Style="{StaticResource watermarkTextBoxInput}" Watermark="Квартира"/>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+
+                            <Grid Grid.Column="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="2*"/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                Foreground="#121315"
+                                VerticalAlignment="Bottom"
+                                Text="Этаж"
+                                FontSize="17"
+                                FontWeight="DemiBold"
+                                HorizontalAlignment="Left"
+                                Margin="5 0 0 0"/>
+
+                                    <TextBlock 
+                                Text="{Binding (Validation.Errors).CurrentItem.ErrorContent, ElementName=FloorTextBox}"
+                                Style="{StaticResource errorTextBoxUltra}"/>
+                                </StackPanel>
+
+                                <Grid Grid.Row="1" Margin="0 5 5 10">
+                                    <Border Style="{StaticResource borderInput}">
+                                        <Xctk:WatermarkTextBox x:Name="FloorTextBox"
+                                                        Text="{Binding User.DeliveryInfo.Floor, UpdateSourceTrigger=PropertyChanged}" 
+                                                        Style="{StaticResource watermarkTextBoxInput}" Watermark="Этаж"/>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+
+                            <Grid Grid.Column="3">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="2*"/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                Foreground="#121315"
+                                VerticalAlignment="Bottom"
+                                Text="Домофон"
+                                FontSize="17"
+                                FontWeight="DemiBold"
+                                HorizontalAlignment="Left"
+                                Margin="5 0 0 0"/>
+
+                                    <TextBlock 
+                                Text="{Binding (Validation.Errors).CurrentItem.ErrorContent, ElementName=IntercomeCodeTextBox}"
+                                Style="{StaticResource errorTextBoxUltra}"/>
+                                </StackPanel>
+
+                                <Grid Grid.Row="1" Margin="0 5 5 10">
+                                    <Border Style="{StaticResource borderInput}">
+                                        <Xctk:WatermarkTextBox x:Name="IntercomeCodeTextBox"
+                                                        Text="{Binding User.DeliveryInfo.IntercomCode, UpdateSourceTrigger=PropertyChanged}" 
+                                                        Style="{StaticResource watermarkTextBoxInput}" Watermark="Домофон"/>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
+
+
+                <Grid Grid.Row="2" Margin="0 10 0 0" Background="#ececec" Opacity="0.7">
+                    <TextBlock Text="История заказов" FontSize="30" HorizontalAlignment="Center"/>
+                </Grid>
+
+                <Border Grid.Row="3" BorderThickness="1" BorderBrush="#ececec">
+                    <ScrollViewer MaxHeight="665"
+                        HorizontalScrollBarVisibility="Hidden"
+                                  VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding User.Orders}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="1.5" BorderBrush="LightGray"  Padding="5 5" CornerRadius="7" Height="70" MaxWidth="600" Background="White" Margin="0 10">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="200" />
+                                                <ColumnDefinition Width="200"/>
+                                                <ColumnDefinition Width="200"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Border Grid.Column="0">
+                                                <TextBlock Text="{Binding Date, StringFormat='dd.MM.yyyy в HH:mm'}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                           FontSize="18"/>
+                                            </Border>
+
+
+                                            <Border Grid.Column="1">
+                                                <TextBlock 
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                           FontSize="20">
+                                    <Run Text="{Binding Price, StringFormat=N2}"/>
+                                    <Run FontSize="17" Text="BYN"/>
+                                                </TextBlock>
+                                            </Border>
+
+                                            <Border Grid.Column="2" Padding="10">
+                                                <Icon:PackIconMaterial 
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Height="30" Width="30">
+                                                    <Icon:PackIconMaterial.Style>
+                                                        <Style TargetType="Icon:PackIconMaterial">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding Status}" Value="0">
+                                                                    <Setter Property="Kind" Value="MessageProcessingOutline"/>
+                                                                    <Setter Property="Foreground" Value="Red"/>
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding Status}" Value="1">
+                                                                    <Setter Property="Kind" Value="TruckDeliveryOutline"/>
+                                                                    <Setter Property="Foreground" Value="Orange"/>
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding Status}" Value="2">
+                                                                    <Setter Property="Kind" Value="HandOkay"/>
+                                                                    <Setter Property="Foreground" Value="Green"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Icon:PackIconMaterial.Style>
+                                                </Icon:PackIconMaterial>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                    </ScrollViewer>           
+                </Border>
+            </Grid>
+        </Border>
+    </ScrollViewer>    
+</UserControl>

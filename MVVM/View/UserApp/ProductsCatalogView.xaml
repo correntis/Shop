@@ -1,0 +1,263 @@
+﻿<UserControl x:Class="Shop.MVVM.View.UserApp.ProductsCatalogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Shop.MVVM.View.UserApp" 
+             xmlns:userapp="clr-namespace:Shop.MVVM.ViewModel.UserApp"
+             xmlns:Converter="clr-namespace:Shop.Converters"
+             xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:Xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=userapp:ProductsCatalogViewModel}"
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:Background="White">
+
+    <UserControl.Resources>
+        <Converter:ByteArrayToImageSourceConverter x:Key="ByteToImage"/>
+        <Converter:OutStockProductToVisibility x:Key="OutStockToVisibility"/>
+        <Converter:InStockProductToVisibility x:Key="InStockToVisibility"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock FontSize="25" TextAlignment="Center" Text="{Binding Title}" FontFamily="Arial"/>
+
+            <Grid Grid.Row="1" Margin="40 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="52"/>
+                    <ColumnDefinition Width="52"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Margin="0 5" 
+                                Style="{StaticResource borderSearch}">
+                    <Xctk:WatermarkTextBox
+                                PreviewKeyDown="WatermarkTextBox_PreviewKeyDown"
+                                Text="{Binding NameFilter}"
+                                Style="{StaticResource watermarkTextBoxSearch }"
+                                Watermark="Поиск товара по названию"/>
+                </Border>
+
+                <Grid Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Button Command="{Binding FilterCommand}"
+                        Style="{StaticResource executeSearchButton}" Margin="10 0 0 0">
+                        <StackPanel Orientation="Horizontal">
+                            <Icon:PackIconMaterial Kind="SearchWeb"
+                                                   Style="{StaticResource executeSearchButtonIcon}"/>
+                        </StackPanel>
+                    </Button>
+                </Grid>
+                <Grid Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Button Command="{Binding UpdateCommand}"
+                        Style="{StaticResource executeSearchResetButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Icon:PackIconMaterial Kind="Update"
+                                                   Style="{StaticResource executeSearchButtonIcon}"/>
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="250"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid>
+                <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto" Margin="0 0 15 5">
+                    <Grid VerticalAlignment="Top" HorizontalAlignment="Center">
+                        <ItemsControl ItemsSource="{Binding Products}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource CatalogProductBorder}">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="auto"/>
+                                                <RowDefinition Height="auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Button Command="{Binding DataContext.OpenProductCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}} }" 
+                                        CommandParameter="{Binding}" 
+                                        Style="{StaticResource CatalogProductButton}">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition/>
+                                                        <RowDefinition/>
+                                                        <RowDefinition/>
+                                                    </Grid.RowDefinitions>
+                                                    <Grid Grid.Row="0" Height="43">
+                                                        <TextBlock Margin="0 3" MaxWidth="200" 
+                                                               TextWrapping="WrapWithOverflow"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"
+                                                               MaxHeight="43"
+                                                                FontSize="17"
+                                                                FontFamily="Arial"
+                                                                Text="{Binding Name}" 
+                                                                TextAlignment="Center">
+                                                            <TextBlock.ToolTip>
+                                                                <TextBlock Text="{Binding Name}" />
+                                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                                    </Grid>
+
+                                                    <Viewbox Grid.Row="1" Width="200" Height="200">
+                                                        <Image Source="{Binding Image, Converter={StaticResource ByteToImage}}" />
+                                                    </Viewbox>
+
+                                                    <Grid Grid.Row="2" Margin="0 10 0 0">
+                                                        <TextBlock TextAlignment="Center" FontFamily="Inter"
+                                                   FontWeight="Normal" Foreground="#4b752c">    
+                                                            <Run FontSize="20" Text="{Binding Price, StringFormat=N2}"/>
+                                                            <Run FontSize="15" Text="BYN"/>
+                                                        </TextBlock>
+                                                    </Grid>
+                                                </Grid>
+                                            </Button>
+
+                                            <Grid Grid.Row="1">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="auto"/>
+                                                    <RowDefinition Height="auto"/>
+                                                </Grid.RowDefinitions>
+                                                <!--<Grid Grid.Row="0" Margin="0 10 0 10" Visibility="Visible">
+                                                    <Button 
+                                                    Visibility="{Binding Quantity, Converter={StaticResource InStockToVisibility}}"
+                                                    Style="{StaticResource ProductActionInStockButton}">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="Добавить в корзину"/>
+                                                        </StackPanel>
+                                                    </Button>
+                                                    <Button Command="{Binding DataContext.CreateRequestCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                            CommandParameter="{Binding}"
+                                                    Visibility="{Binding Quantity, Converter={StaticResource OutStockToVisibility}}"
+                                                    Style="{StaticResource ProductActionOutStockButton}">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="Оставить заявку"/>
+                                                        </StackPanel>
+                                                    </Button>
+                                                </Grid>-->
+
+                                                <Grid Grid.Row="1" Visibility="Visible">
+                                                    <TextBlock Foreground="#6a8c51" FontSize="13" TextAlignment="Center" FontFamily="Inter" Text="в наличии на складе"
+                                               Visibility="{Binding Quantity, Converter={StaticResource InStockToVisibility}}"/>
+                                                    <TextBlock Foreground="#a5a7a8" FontSize="13" TextAlignment="Center" FontFamily="Inter" Text="отсутствует на складе"
+                                               Visibility="{Binding Quantity, Converter={StaticResource OutStockToVisibility}}"/>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+
+            <Grid Grid.Column="1" Background="Transparent" Margin="0 10 0 0">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid Margin="0 0 0 10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" Width="220" HorizontalAlignment="Center" TextAlignment="Center"
+                               VerticalAlignment="Center" FontSize="18"
+                               FontWeight="SemiBold" Text="Фильтры"/>
+
+
+                                <Grid Grid.Row="1" Background="#e6e6e6">
+                                    <TextBlock Margin="3" HorizontalAlignment="Left"
+                                       VerticalAlignment="Center" FontSize="16"
+                                       FontWeight="DemiBold" Text="Цена" />
+                                </Grid>
+
+                                <TextBlock Grid.Row="2" HorizontalAlignment="Center"
+                               VerticalAlignment="Center" FontFamily="TIMES NEW ROMAN" FontSize="16">
+                                <Run Text="от"/>
+                                <Run Text="{Binding LowPriceFilter, StringFormat=N2}"/>
+                                <Run Text="  до"/>
+                                <Run Text="{Binding HighPriceFilter, StringFormat=N2}"/>
+                                </TextBlock>
+
+                                <Xctk:RangeSlider Grid.Row="3"
+                                              Margin="3 0 3 0"
+                                              LowerValue="{Binding LowPriceFilter}"
+                                              HigherValue="{Binding HighPriceFilter}"
+                                              Maximum="{Binding HighPrice}"
+                                              Minimum="0" 
+                                              PreviewMouseLeftButtonUp="RangeSlider_MouseLeftButtonUp"/>
+                            </Grid>
+
+                            <Grid Grid.Row="1">
+                                <ItemsControl ItemsSource="{Binding Current.Characters}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="auto"/>
+                                                    <RowDefinition Height="auto"/>
+                                                </Grid.RowDefinitions>
+                                                <Grid Background="#e6e6e6">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="30"/>
+                                                    </Grid.ColumnDefinitions>
+
+
+                                                    <TextBlock Margin="3 3 0 3" Width="220" HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center" FontSize="16"
+                                                       FontWeight="Bold" Text="{Binding Name}"/>
+
+                                                    <Button Grid.Column="1"
+                                                        Style="{DynamicResource tabCloseButton}"
+                                                        HorizontalAlignment="Center">
+                                                        <Icon:PackIconMaterial Kind="ArrowLeft"/>
+                                                    </Button>
+                                                </Grid>
+
+                                                <Grid Grid.Row="1">
+                                                    <Xctk:CheckListBox MaxHeight="54" BorderThickness="0" ItemsSource="{Binding CharacterValues}"
+                                                            ItemSelectionChanged="CheckListBox_ItemSelectionChanged">
+                                                    </Xctk:CheckListBox>
+                                                </Grid>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+                        </Grid>
+                    </ScrollViewer>
+                </Grid>
+
+        </Grid>
+    </Grid>
+</UserControl>
+

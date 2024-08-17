@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.18362.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Core" Version="1.6.0" />
+    <PackageReference Include="BlackPearl.Controls.Library" Version="2.0.4" />
+    <PackageReference Include="EPPlus" Version="7.1.2" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.6.0" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="4.11.0" />
+    <PackageReference Include="MaterialDesignThemes" Version="5.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.4" />
+    <PackageReference Include="Microsoft.Win32.Primitives" Version="4.3.0" />
+    <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Win32.SystemEvents" Version="8.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Prism.Core" Version="8.1.97" />
+    <PackageReference Include="Sdl.MultiSelectComboBox" Version="1.0.77" />
+    <PackageReference Include="Syncfusion.Tools.WPF" Version="25.2.3" />
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
+    <PackageReference Include="WPFChromeTabsMVVM" Version="1.4.0" />
+  </ItemGroup>
+
+</Project>
